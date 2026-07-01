@@ -1,7 +1,3 @@
-# MODULE 5: STREAMLIT DASHBOARD
-# Karnataka Crime Intelligence & Analytical Platform
-# Run from Anaconda Prompt: streamlit run streamlit_dashboard.py
-
 import streamlit as st
 import pandas as pd
 import numpy as np
@@ -10,10 +6,6 @@ import seaborn as sns
 import os, json, warnings
 warnings.filterwarnings('ignore')
 
-# ============================================================
-# AUTO-DETECT OUTPUT FOLDER
-# Looks in script's own folder and common locations
-# ============================================================
 def find_output_path():
     script_dir = os.path.dirname(os.path.abspath(__file__))
     candidates = [
@@ -32,9 +24,6 @@ def find_output_path():
 
 OUTPUT_PATH = find_output_path()
 
-# ============================================================
-# PAGE CONFIG
-# ============================================================
 st.set_page_config(
     page_title="KSP Crime Intelligence Platform",
     page_icon="🚨",
@@ -42,9 +31,7 @@ st.set_page_config(
     initial_sidebar_state="expanded"
 )
 
-# ============================================================
-# CSS
-# ============================================================
+
 st.markdown("""
 <style>
     .stApp { background-color: #0d1117; color: #e6edf3; }
@@ -75,9 +62,6 @@ st.markdown("""
 </style>
 """, unsafe_allow_html=True)
 
-# ============================================================
-# LOAD DATA
-# ============================================================
 @st.cache_data
 def load_all_data(base_path):
     data = {}
@@ -102,9 +86,6 @@ def load_all_data(base_path):
 
 data, found_path = load_all_data(OUTPUT_PATH)
 
-# ============================================================
-# FRIENDLY ERROR if CSV not found
-# ============================================================
 if data is None:
     st.markdown("""
     <div class="main-header">
@@ -156,9 +137,6 @@ state_col    = 'STATE_UT'   if 'STATE_UT'   in df.columns else df.columns[0]
 district_col = 'DISTRICT'   if 'DISTRICT'   in df.columns else df.columns[1]
 year_col     = 'YEAR'       if 'YEAR'       in df.columns else df.columns[2]
 
-# ============================================================
-# SIDEBAR
-# ============================================================
 st.sidebar.markdown("## 🚨 KSP Intelligence Platform")
 st.sidebar.markdown(f"<small style='color:#3fb950'>✅ Data loaded from:<br>{OUTPUT_PATH}</small>", unsafe_allow_html=True)
 st.sidebar.markdown("---")
@@ -198,9 +176,6 @@ df_filtered = df_all.copy()
 if selected_district != "All Districts":
     df_filtered = df_all[df_all[district_col] == selected_district]
 
-# ============================================================
-# HELPER — dark chart style
-# ============================================================
 def dark_fig(w=7, h=3.5):
     fig, ax = plt.subplots(figsize=(w, h))
     fig.patch.set_facecolor('#161b22')
@@ -211,9 +186,6 @@ def dark_fig(w=7, h=3.5):
     ax.grid(True, alpha=0.2, color='#30363d')
     return fig, ax
 
-# ============================================================
-# PAGE 1 — OVERVIEW
-# ============================================================
 if page == "📊 Overview Dashboard":
 
     st.markdown("""
@@ -330,9 +302,7 @@ if page == "📊 Overview Dashboard":
             st.pyplot(fig, use_container_width=True)
             plt.close()
 
-# ============================================================
-# PAGE 2 — HOTSPOT MAP
-# ============================================================
+
 elif page == "🗺️ Hotspot Map":
     st.markdown("## 🗺️ Crime Hotspot Map")
 
@@ -361,9 +331,6 @@ elif page == "🗺️ Hotspot Map":
     if os.path.exists(os.path.join(OUTPUT_PATH, 'hotspot_clusters.png')):
         st.image(os.path.join(OUTPUT_PATH, 'hotspot_clusters.png'), use_container_width=True)
 
-# ============================================================
-# PAGE 3 — RISK PREDICTOR
-# ============================================================
 elif page == "⚠️ Risk Predictor":
     st.markdown("## ⚠️ District Risk Predictor")
     col1, col2 = st.columns([1, 2])
@@ -413,9 +380,6 @@ elif page == "⚠️ Risk Predictor":
         st.caption("Note: 'Zz Total' in the chart is a dataset aggregate row — not a real district. Ignore it.")
         st.image(os.path.join(OUTPUT_PATH, 'xgb_results.png'), use_container_width=True)
 
-# ============================================================
-# PAGE 4 — FORECAST
-# ============================================================
 elif page == "📈 Crime Forecast":
     st.markdown("## 📈 Crime Forecast — Time Series")
 
@@ -482,9 +446,6 @@ elif page == "📈 Crime Forecast":
         if os.path.exists(os.path.join(OUTPUT_PATH, 'forecast_top5_districts.png')):
             st.image(os.path.join(OUTPUT_PATH, 'forecast_top5_districts.png'), use_container_width=True)
 
-# ============================================================
-# PAGE 5 — ANOMALY ALERTS
-# ============================================================
 elif page == "🔴 Anomaly Alerts":
     st.markdown("## 🔴 Anomaly Detection — Unusual Crime Patterns")
 
@@ -531,9 +492,6 @@ elif page == "🔴 Anomaly Alerts":
     else:
         st.warning("anomaly_flagged.csv not found. Run anomaly_detection.py first.")
 
-# ============================================================
-# PAGE 6 — NETWORK ANALYSIS
-# ============================================================
 elif page == "🔗 Network Analysis":
     st.markdown("## 🔗 Criminal Network & Link Analysis")
 
@@ -566,9 +524,6 @@ elif page == "🔗 Network Analysis":
         st.pyplot(fig, use_container_width=True)
         plt.close()
 
-# ============================================================
-# PAGE 7 — RAW DATA EXPLORER
-# ============================================================
 elif page == "📋 Raw Data Explorer":
     st.markdown("## 📋 Raw Data Explorer")
     col1, col2 = st.columns(2)
@@ -590,9 +545,7 @@ elif page == "📋 Raw Data Explorer":
     st.download_button("⬇️ Download Filtered Data as CSV", data=csv_bytes,
                        file_name="karnataka_filtered.csv", mime="text/csv")
 
-# ============================================================
-# SIDEBAR FOOTER
-# ============================================================
+
 st.sidebar.markdown("---")
 st.sidebar.markdown("""
 <div style="color:#8b949e; font-size:0.75em; text-align:center;">
