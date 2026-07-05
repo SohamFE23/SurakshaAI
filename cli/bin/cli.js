@@ -1,4 +1,4 @@
-#!/usr/bin/env node //dont remove this line otherwiuse this wont work it is important line
+#!/usr/bin/env node
 const { Command } = require('commander');
 const program = new Command();
 program
