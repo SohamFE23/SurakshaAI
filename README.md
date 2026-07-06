@@ -24,4 +24,6 @@ python risk.py state_name
 On Web Browser
 http://127.0.0.1:5000/risk/Delhi
          
+if not run then check whether the Catalyst cli is broken or not . For datasets refer to the datasets/rajananad/crime-in-india and versions
+
 
