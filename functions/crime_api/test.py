@@ -52,9 +52,8 @@ class SurakshaCLIReport:
         'cases_registered': ['CPA_-_Cases_Registered', 'CPA - Cases Registered', 'Cases_Registered', 'Cases Registered'],
 
         # 2. Rape Victims
-        'rape_victims_total': ['Victims_of_Rape_Total', 'Victims of Rape Total', 'Rape_Total', 'Total'],
-        'rape_victims_below_18': ['Victims_of_Rape_Below_18_Years', 'Victims of Rape Below 18 Years',
-                                  'Below_18_Years', 'Below 18 Years', 'Below_18'],
+        'rape_victims_total': ['Victims_of_Rape_Total'],
+        'rape_victims_below_18': ['Victims_Upto_10_Yrs','Victims_Between_10-14_Yrs','Victims_Between_14-18_Yrs'],
 
         # 3. Property Stolen
         'property_stolen_value': ['Property_Stolen_Value', 'Property Stolen Value', 'Value_of_Property_Stolen',
@@ -63,8 +62,33 @@ class SurakshaCLIReport:
                                      'Recovered_Value', 'Recovered Value', 'Property_Recovered'],
 
         # 4. Murder
-        'murder_victims_total': ['Murder_victims_Total', 'Murder victims Total', 'Murder_Total', 'Total'],
-        'murder_victims_female': ['Murder_victims_Female', 'Murder victims Female', 'Murder_Female', 'Female'],
+        'murder_victims_total': [
+            'Victims_Total'
+        ],
+
+        'victims_above50': [
+            'Victims_Above_50_Yrs'
+        ],
+
+        'victims_upto10': [
+            'Victims_Upto_10_Yrs'
+        ],
+
+        'victims_10_15': [
+            'Victims_Upto_10_15_Yrs'
+        ],
+
+        'victims_15_18': [
+            'Victims_Upto_15_18_Yrs'
+        ],
+
+        'victims_18_30': [
+            'Victims_Upto_18_30_Yrs'
+        ],
+
+        'victims_30_50': [
+            'Victims_Upto_30_50_Yrs'
+        ],
 
         # 5. Auto Theft
         'auto_theft_cases': ['Auto_Theft_Stolen', 'Auto Theft Stolen', 'Auto_Theft_Cases', 'Auto Theft Cases',
@@ -277,7 +301,14 @@ class SurakshaCLIReport:
         lines.append("2. Rape Victims")
         lines.append(self._separator())
         rape_total = self._sum_metric('rape_victims', state_name, year, 'rape_victims_total')
-        rape_below18 = self._sum_metric('rape_victims', state_name, year, 'rape_victims_below_18')
+        rows = self._get_dataset_rows('rape_victims', state_name, year)
+        rape_below18 = 0
+        for row in rows:
+            rape_below18 += (
+                row.get('Victims_Upto_10_Yrs',0)
+                + row.get('Victims_Between_10-14_Yrs',0)
+                + row.get('Victims_Between_14-18_Yrs',0)
+    )
         lines.append(self._format_kv("Total Victims", f"{rape_total:,}"))
         lines.append(self._format_kv("Victims Below 18", f"{rape_below18:,}"))
         lines.append("")
@@ -297,9 +328,9 @@ class SurakshaCLIReport:
         lines.append("4. Murder")
         lines.append(self._separator())
         murder_total = self._sum_metric('murder', state_name, year, 'murder_victims_total')
-        murder_female = self._sum_metric('murder', state_name, year, 'murder_victims_female')
+        murder_above50 = self._sum_metric('murder',state_name,year,'victims_above50')
         lines.append(self._format_kv("Total Victims", f"{murder_total:,}"))
-        lines.append(self._format_kv("Female Victims", f"{murder_female:,}"))
+        lines.append(self._format_kv("Victims Above 50", f"{murder_above50:,}"))
         lines.append("")
 
         # 5. Auto Theft

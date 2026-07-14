@@ -58,8 +58,13 @@ class SurakshaAIDataProcessor:
                 'key_cols': ['Area_Name', 'Year'],
                 'metrics': {
                     'rape_victims_total': 'Victims_of_Rape_Total',
-                    'rape_victims_below_18': 'Victims_of_Rape_Below_18_Years',
-                    'rape_victims_above_18': 'Victims_of_Rape_Above_18_Years'
+                    'rape_victims_total': 'Victims_of_Rape_Total',
+                    'victims_upto_10': 'Victims_Upto_10_Yrs',
+                    'victims_10_14': 'Victims_Between_10-14_Yrs',
+                    'victims_14_18': 'Victims_Between_14-18_Yrs',
+                    'victims_18_30': 'Victims_Between_18-30_Yrs',
+                    'victims_30_50': 'Victims_Between_30-50_Yrs',
+                    'victims_above_50': 'Victims_Above_50_Yrs'
                 }
             },
             # File 3: Property Stolen
@@ -77,9 +82,13 @@ class SurakshaAIDataProcessor:
                 'pattern': '32_Murder_victim_age_sex',
                 'key_cols': ['Area_Name', 'Year'],
                 'metrics': {
-                    'murder_victims_total': 'Murder_victims_Total',
-                    'murder_victims_male': 'Murder_victims_Male',
-                    'murder_victims_female': 'Murder_victims_Female'
+                    'murder_victims_total':'Victims_Total',
+                    'victims_upto10':'Victims_Upto_10_Yrs',
+                    'victims_10_15':'Victims_Upto_10_15_Yrs',
+                    'victims_15_18':'Victims_Upto_15_18_Yrs',
+                    'victims_18_30':'Victims_Upto_18_30_Yrs',
+                    'victims_30_50':'Victims_Upto_30_50_Yrs',
+                    'victims_above50':'Victims_Above_50_Yrs'
                 }
             },
             # File 5: Auto Theft
@@ -372,6 +381,12 @@ class SurakshaAIDataProcessor:
         if 'rape_victims' in year_data:
             r = year_data['rape_victims']
             m['rape_victims'] = r.get('Victims_of_Rape_Total', 0) or 0
+
+            m['rape_victims_below18'] = (
+                (r.get('Victims_Upto_10_Yrs', 0) or 0) +
+                (r.get('Victims_Between_10-14_Yrs', 0) or 0) +
+                (r.get('Victims_Between_14-18_Yrs', 0) or 0)
+            )
         else:
             m['rape_victims'] = 0
 
@@ -388,7 +403,7 @@ class SurakshaAIDataProcessor:
         # From murder
         if 'murder' in year_data:
             mu = year_data['murder']
-            m['murder_victims'] = mu.get('Murder_victims_Total', 0) or 0
+            m['murder_victims'] = mu.get('Victims_Total',0) or 0
         else:
             m['murder_victims'] = 0
         
